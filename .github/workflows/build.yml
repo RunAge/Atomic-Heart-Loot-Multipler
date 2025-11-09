@@ -22,10 +22,6 @@ jobs:
             outfile: lootboxesmult.exe
             asset_name: lootboxesmult-windows-x64.exe
             build_script: build:win
-          - os: macos-latest
-            outfile: lootboxesmult.app
-            asset_name: lootboxesmult-macos-arm64
-            build_script: build:mac
 
     steps:
       - name: Checkout code
