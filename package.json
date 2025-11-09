@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@inquirer/prompts": "npm:@inquirer/prompts"
+  },
+  "name": "lootboxesmult",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+    "start": "bun cli.ts",
+    "build:win": "bun build --compile --target=bun-windows-x64 ./cli.ts --outfile lootboxesmult.exe",
+    "build:mac": "bun build --bytecode --compile --target=bun-macos-arm64 ./cli.ts --outfile lootboxesmult.app",
+    "build:linux": "bun build --bytecode --compile --target=bun-linux-x64 ./cli.ts --outfile lootboxesmult"
+  }
+}
