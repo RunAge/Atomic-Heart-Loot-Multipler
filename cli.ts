@@ -18,6 +18,12 @@ if (!originalFile.exists()) {
   }
 
   console.log("Creating backup of LootBoxes.csv as LootBoxes-original.csv");
+
+  if(!(await Bun.file("LootBoxes.csv").exists())) {
+    console.log("LootBoxes.csv not found. Please copy it to the same directory as this script.");
+    process.exit(1);
+  }
+  
   await copyFile("LootBoxes.csv", "LootBoxes-original.csv");
 } else {
   console.log(
