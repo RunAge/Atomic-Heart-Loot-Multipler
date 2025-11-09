@@ -1,10 +1,9 @@
 import { input, confirm } from "@inquirer/prompts";
 import { copyFile, rename } from "node:fs/promises";
 
-const originalFile = Bun.file("LootBoxes-original.csv");
 const orginalFileExists = async () => {
   try {
-    return await originalFile.exists();
+    return await Bun.file("LootBoxes-original.csv").exists();
   } catch (error) {
     return false;
   }
@@ -76,7 +75,8 @@ try {
   console.log("Error removing existing dirty file LootBoxes-dirty.csv:", error);
   process.exit(1);
 }
-const orginalContent = (await originalFile.text()).split("\n");
+
+const orginalContent = (await Bun.file("LootBoxes-original.csv").text()).split("\n");
 const dirtyContent = orginalContent.map((line) => {
   if (line === "") {
     return line;
