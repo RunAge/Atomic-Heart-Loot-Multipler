@@ -1,11 +1,16 @@
 import { input, confirm } from "@inquirer/prompts";
-import { copyFile, appendFile, rename } from "node:fs/promises";
-import { WriteStream } from "fs";
-import { createWriteStream } from "node:fs";
+import { copyFile, rename } from "node:fs/promises";
 
 const originalFile = Bun.file("LootBoxes-original.csv");
+const orginalFileExists = async () => {
+  try {
+    return await originalFile.exists();
+  } catch (error) {
+    return false;
+  }
+}
 
-if (!originalFile.exists()) {
+if (!(await orginalFileExists())) {
   const isModified = await confirm({
     message: "No backup file found. Have you modified LootBoxes.csv before?",
     default: true,
@@ -19,11 +24,15 @@ if (!originalFile.exists()) {
 
   console.log("Creating backup of LootBoxes.csv as LootBoxes-original.csv");
 
-  if(!(await Bun.file("LootBoxes.csv").exists())) {
-    console.log("LootBoxes.csv not found. Please copy it to the same directory as this script.");
+  try {
+    await Bun.file("LootBoxes.csv").exists()
+  } catch (error) {
+    console.log("Error checking if LootBoxes.csv exists:", error);
     process.exit(1);
   }
-  
+
+
+
   await copyFile("LootBoxes.csv", "LootBoxes-original.csv");
 } else {
   console.log(
@@ -57,9 +66,15 @@ const multiplierInput = Number(
 console.log(`Applying multiplier of ${multiplierInput} to loot...`);
 
 const dirtyFile = Bun.file("LootBoxes-dirty.csv");
-if (await dirtyFile.exists()) {
-  console.log("Removing existing dirty file LootBoxes-dirty.csv");
-  await dirtyFile.unlink();
+
+try {
+  if (await dirtyFile.exists()) {
+    console.log("Removing existing dirty file LootBoxes-dirty.csv");
+    await dirtyFile.unlink();
+  }
+} catch (error) {
+  console.log("Error removing existing dirty file LootBoxes-dirty.csv:", error);
+  process.exit(1);
 }
 const orginalContent = (await originalFile.text()).split("\n");
 const dirtyContent = orginalContent.map((line) => {
